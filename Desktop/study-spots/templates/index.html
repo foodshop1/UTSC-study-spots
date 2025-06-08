@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Study Spots</title>
+  </head>
+  <body>
+    <h1>Study Spots</h1>
+    <ul>
+      {% for spot in spots.study_spaces %}
+      <li>
+        <strong>{{ spot.Building }}</strong> - Room {{ spot["Room Number"] }} ({{ spot["Type of space"] }}, {{
+        spot["Group/Individual"] }}, {{ spot["Seating Spaces"] }} seats)
+      </li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>
