@@ -1,0 +1,113 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background-color: #f5f5f5;
+}
+
+h1 {
+  color: #333;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+h2 {
+  margin-top: 40px;
+  color: #333;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th {
+  background-color: #4caf50;
+  color: white;
+  padding: 12px 15px;
+  text-align: center; /* Center all headers */
+  font-weight: bold;
+}
+
+td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #ddd;
+  text-align: center; /* Center all cells */
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tr:hover {
+  background-color: #f5f5f5;
+}
+
+.building {
+  font-weight: bold;
+  color: #2c3e50;
+  text-align: center; /* Ensure building names are centered */
+}
+
+.room-number {
+  text-align: center; /* Keep room numbers centered */
+}
+
+.seating {
+  text-align: center; /* Keep seating centered */
+  font-weight: bold;
+}
+
+.type {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.group {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.individualAndgroup {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.individual {
+  background-color: #ccf1e0;
+  color: #17804f;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  body {
+    margin: 10px;
+  }
+
+  table {
+    font-size: 14px;
+  }
+
+  th,
+  td {
+    padding: 8px 10px;
+  }
+}
+
+@media print {
+  body {
+    background-color: white;
+  }
+
+  table {
+    box-shadow: none;
+  }
+
+  tr:hover {
+    background-color: transparent;
+  }
+}

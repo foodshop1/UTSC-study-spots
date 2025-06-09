@@ -2,16 +2,39 @@
 <html>
   <head>
     <title>Study Spots</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
   </head>
   <body>
     <h1>Study Spots</h1>
-    <ul>
-      {% for spot in spots.study_spaces %}
-      <li>
-        <strong>{{ spot.Building }}</strong> - Room {{ spot["Room Number"] }} ({{ spot["Type of space"] }}, {{
-        spot["Group/Individual"] }}, {{ spot["Seating Spaces"] }} seats)
-      </li>
-      {% endfor %}
-    </ul>
+
+    <!-- Template version with Jinja2 syntax -->
+    <table>
+      <thead>
+        <tr>
+          <th>Building</th>
+          <th>Room Number</th>
+          <th>Seating Spaces</th>
+          <th>Group/Individual</th>
+          <th>Type of Space</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for spot in spots['study_spaces'] %}
+        <tr>
+          <td class="building">{{ spot['Building'] }}</td>
+          <td class="room-number">{{ spot['Room Number'] }}</td>
+          <td class="seating">{{ spot['Seating Spaces'] }}</td>
+          <td>
+            <span
+              class="type {% if spot['Group/Individual'].lower() == 'group' %}group {%elif spot['Group/Individual'].lower() == 'individual'%}individual{% else %}individualAndgroup{% endif %}"
+            >
+              {{ spot['Group/Individual'] }}
+            </span>
+          </td>
+          <td>{{ spot['Type of space'] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </body>
 </html>
