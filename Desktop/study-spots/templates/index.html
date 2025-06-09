@@ -1,40 +1,159 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Study Spots</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Campus Study Spots</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
   </head>
   <body>
-    <h1>Study Spots</h1>
+    <div class="container">
+      <div class="header">
+        <img class="logo" src="{{ url_for('static', filename='images/uoft.png') }}" alt="UTSC logo" />
+        <h1>UTSC Campus Study Spots</h1>
+        <p>Find the perfect place to study on campus</p>
+      </div>
 
-    <!-- Template version with Jinja2 syntax -->
-    <table>
-      <thead>
-        <tr>
-          <th>Building</th>
-          <th>Room Number</th>
-          <th>Seating Spaces</th>
-          <th>Group/Individual</th>
-          <th>Type of Space</th>
-        </tr>
-      </thead>
-      <tbody>
+      <div class="search-filter">
+        <div class="search-box">
+          <input type="text" placeholder="Search by building or room..." id="searchInput" />
+          <i class="fas fa-search"></i>
+        </div>
+        <div class="filter-buttons">
+          <button class="filter-btn active" data-filter="all">All Spots</button>
+          <button class="filter-btn" data-filter="individual">Individual</button>
+          <button class="filter-btn" data-filter="group">Group</button>
+          <button class="filter-btn" data-filter="quiet">Quiet</button>
+          <button class="filter-btn" data-filter="collaborative">Collaborative</button>
+        </div>
+      </div>
+
+      <div class="study-spots-grid" id="spotsGrid">
         {% for spot in spots['study_spaces'] %}
-        <tr>
-          <td class="building">{{ spot['Building'] }}</td>
-          <td class="room-number">{{ spot['Room Number'] }}</td>
-          <td class="seating">{{ spot['Seating Spaces'] }}</td>
-          <td>
-            <span
-              class="type {% if spot['Group/Individual'].lower() == 'group' %}group {%elif spot['Group/Individual'].lower() == 'individual'%}individual{% else %}individualAndgroup{% endif %}"
-            >
-              {{ spot['Group/Individual'] }}
-            </span>
-          </td>
-          <td>{{ spot['Type of space'] }}</td>
-        </tr>
+        <div
+          class="spot-card"
+          data-building="{{ spot['Building'] }}"
+          data-type="{{ spot['Group/Individual']|lower }}"
+          data-space="{{ spot['Type of space']|lower }}"
+        >
+          <!--
+          if statement boilerplate
+          {%if 'Sam Ibrahim Building' in spot['Building']%}
+              <img src="{{ url_for('static', filename='images/AA207.jpg') }}" alt="Admin logo" />
+              {%endif%} -->
+
+          <div class="spot-image">
+            <div class="spot-image-placeholder">
+              <i class="fa-solid fa-book-open"></i>
+            </div>
+            <div class="availability-badge available">Available</div>
+          </div>
+
+          <div class="card-content">
+            <div class="spot-header">
+              <div class="spot-title">
+                <h3>{{ spot['Building'] }}</h3>
+                <p>Room {{ spot['Room Number'] }}</p>
+              </div>
+              <div class="rating">
+                <div class="stars">
+                  <i class="fas fa-star star filled"></i>
+                  <i class="fas fa-star star filled"></i>
+                  <i class="fas fa-star star filled"></i>
+                  <i class="fas fa-star star filled"></i>
+                  <i class="fas fa-star star"></i>
+                </div>
+                <span class="rating-text">4.2 (23)</span>
+              </div>
+            </div>
+
+            <div class="spot-details">
+              <div class="detail-item">
+                <i class="fas fa-users"></i>
+                <span>{{ spot['Seating Spaces'] }} seats</span>
+              </div>
+              <div class="detail-item">
+                <i class="fas fa-volume-down"></i>
+                <span>Moderate noise</span>
+              </div>
+              <div class="detail-item">
+                <i class="fas fa-wifi"></i>
+                <span>Free WiFi</span>
+              </div>
+              <div class="detail-item">
+                <i class="fas fa-plug"></i>
+                <span>Power outlets</span>
+              </div>
+            </div>
+
+            <div class="tags">
+              <span class="tag {{ 'group' if 'group' in spot['Group/Individual'].lower() else 'individual' }}">
+                {{ spot['Group/Individual'] }}
+              </span>
+
+              <span class="tag space"> {{ spot['Type of space'] }}</span>
+
+              {% if 'study carrel' in spot['Type of space'].lower() %}
+              <span class="tag space">Quiet Zone</span>
+              {% endif %}
+
+              <!-- -->
+              {% if spot['Seating Spaces']|int > 30 %}
+              <span class="tag seating">Large Space</span>
+              {% endif %}
+            </div>
+
+            <div class="card-actions">
+              <button class="btn btn-primary" onclick="rateSpot('{{ spot['Building'] }}', '{{ spot['Room Number'] }}')">
+                <i class="fas fa-star"></i> Rate
+              </button>
+              <button class="btn btn-secondary"><i class="fa-solid fa-circle-info"></i> More info</button>
+            </div>
+          </div>
+        </div>
         {% endfor %}
-      </tbody>
-    </table>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat-item">
+          <h3>{{ spots['study_spaces']|length }}</h3>
+          <p>Study Spots</p>
+        </div>
+        <div class="stat-item">
+          <h3>4.3</h3>
+          <p>Average Rating</p>
+        </div>
+        <div class="stat-item">
+          <h3>1,247</h3>
+          <p>Total Reviews</p>
+        </div>
+        <div class="stat-item">
+          <h3>85%</h3>
+          <p>Currently Available</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rating Modal -->
+    <div class="modal" id="ratingModal">
+      <div class="modal-content">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <div class="rating-form">
+          <h3 id="modalTitle">Rate this Study Spot</h3>
+          <div class="star-rating" id="starRating">
+            <i class="fas fa-star star" data-rating="1"></i>
+            <i class="fas fa-star star" data-rating="2"></i>
+            <i class="fas fa-star star" data-rating="3"></i>
+            <i class="fas fa-star star" data-rating="4"></i>
+            <i class="fas fa-star star" data-rating="5"></i>
+          </div>
+          <textarea placeholder="Share your experience with this study spot..."></textarea>
+          <button class="btn btn-primary" onclick="submitRating()">
+            <i class="fas fa-paper-plane"></i> Submit Review
+          </button>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
